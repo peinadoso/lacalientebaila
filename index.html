@@ -14,13 +14,15 @@
         }
     </style>
 </head>
-<body class="bg-cuban min-h-screen flex items-center justify-center font-sans">
+<body class="bg-cuban min-h-screen flex items-center justify-center font-sans text-white">
 
     <div class="max-w-3xl text-center px-6 py-12 bg-black/60 backdrop-blur-md rounded-3xl border border-yellow-600/30">
-        <h1 class="text-5xl md:text-7xl font-black text-yellow-500 mb-4 uppercase tracking-tighter">
-            La Caliente
-        </h1>
-        <p class="text-xl md:text-2xl font-bold text-white mb-2">
+        
+        <div class="flex justify-center mb-0">
+            <img src="images/lacaliente-logo.svg" alt="La Caliente" class="w-64 md:w-80 h-auto">
+        </div>
+
+        <p class="text-xl md:text-2xl font-bold mb-2">
             EL EVENTO DE TIMBA Y CASINO QUE BUENOS AIRES ESPERABA
         </p>
         <p class="text-lg text-gray-300 mb-8 italic">
@@ -31,7 +33,6 @@
             PREVENTA EXCLUSIVA MUY PRONTO
         </div>
 
-        
         <form id="my-form" action="https://formspree.io/f/xaqdwnrq" method="POST" class="flex flex-col md:flex-row gap-4 justify-center">
             <input type="email" name="email" placeholder="Tu email para recibir el descuento" required
                 class="px-6 py-4 rounded-full bg-white/10 border border-gray-500 focus:outline-none focus:border-yellow-500 text-white w-full md:w-80">
@@ -50,38 +51,37 @@
         var form = document.getElementById("my-form");
         
         async function handleSubmit(event) {
-            event.preventDefault(); // Evita que la página se recargue o se vaya a Formspree
+            event.preventDefault();
             var status = document.getElementById("submit-button");
             var data = new FormData(event.target);
             
-            status.innerHTML = "Enviando..."; // Feedback visual rápido
+            status.innerHTML = "Enviando...";
             status.disabled = true;
 
             fetch(event.target.action, {
-            method: form.method,
-            body: data,
-            headers: {
-                'Accept': 'application/json'
-            }
-            }).then(response => {
-            if (response.ok) {
-                // ¡ÉXITO! Aquí es donde hackeamos la redirección
-                window.location.href = "gracias.html"; 
-            } else {
-                response.json().then(data => {
-                if (Object.hasOwn(data, 'errors')) {
-                    alert(data["errors"].map(error => error["message"]).join(", "));
-                } else {
-                    alert("Oops! Hubo un problema al enviar el formulario");
+                method: form.method,
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
                 }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "gracias.html"; 
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            alert(data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert("Oops! Hubo un problema al enviar el formulario");
+                        }
+                        status.innerHTML = "AVÍSAME PRIMERO";
+                        status.disabled = false;
+                    })
+                }
+            }).catch(error => {
+                alert("Oops! Hubo un problema técnico");
                 status.innerHTML = "AVÍSAME PRIMERO";
                 status.disabled = false;
-                })
-            }
-            }).catch(error => {
-            alert("Oops! Hubo un problema técnico");
-            status.innerHTML = "AVÍSAME PRIMERO";
-            status.disabled = false;
             });
         }
         
